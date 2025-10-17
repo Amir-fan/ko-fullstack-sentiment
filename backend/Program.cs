@@ -63,6 +63,11 @@ using (var scope = app.Services.CreateScope())
 
 app.UseCors("default");
 
+// Explicit preflight handlers (fast response on cold start)
+app.MapMethods("/register", new[] { "OPTIONS" }, () => Results.Ok());
+app.MapMethods("/message", new[] { "OPTIONS" }, () => Results.Ok());
+app.MapMethods("/messages", new[] { "OPTIONS" }, () => Results.Ok());
+
 app.MapPost("/register", async (RegisterRequest req, AppDbContext db, ILoggerFactory lf) =>
 {
     var log = lf.CreateLogger("register");
