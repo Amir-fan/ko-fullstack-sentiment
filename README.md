@@ -70,3 +70,4 @@ Not: Backend, HF Spaces endpoint’ine `{ text }` ile POST eder; yanıttan `{lab
 - Render Free soğuk başlangıç: İlk istek 20–90 sn sürebilir; nadiren zaman aşımı olabilir. Tekrar deneyin veya servisi yeniden deploy ederek “uyandırın”. `GET /health` ile durum kontrolü yapabilirsiniz.
 - CORS hataları: `CORS_ORIGINS` yalnızca geçerli origin’leri içermelidir (Vercel domain + `http://localhost:5173`). Önizleme domain’leri kullanıyorsanız onları da ekleyin.
 - HF Spaces soğuk başlangıç: İlk `/analyze` çağrısı yavaş olabilir; backend HttpClient zaman aşımı 10 sn. UI bu durumda hatayı nazikçe gösterir; tekrar deneyin.
+- Model dili: Secilen model Ingilizce metinlerde daha iyi sonuc verir. Turkce calisir ancak Ingilizce girdiler daha tutarlidir.
