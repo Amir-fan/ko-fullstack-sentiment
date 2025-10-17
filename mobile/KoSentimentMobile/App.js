@@ -74,6 +74,11 @@ export default function App() {
     }
   };
 
+  const onLogout = () => {
+    setItems([]);
+    setUser(null);
+  };
+
   if (!user) {
     return (
       <SafeAreaView style={styles.container}>
@@ -89,7 +94,10 @@ export default function App() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Hello, {user.nickname}</Text>
+      <View style={{flexDirection:'row', justifyContent:'space-between', alignItems:'center'}}>
+        <Text style={styles.title}>Hello, {user.nickname}</Text>
+        <Button title="Logout" onPress={onLogout} />
+      </View>
       <FlatList
         data={items}
         keyExtractor={m => String(m.id)}

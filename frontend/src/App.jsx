@@ -99,6 +99,15 @@ export default function App() {
     }
   }
 
+  function handleLogout() {
+    try {
+      localStorage.removeItem('userId')
+      localStorage.removeItem('nickname')
+    } catch {}
+    setMessages([])
+    setUser(null)
+  }
+
   if (!user) {
     return (
       <div style={{ padding: 16 }}>
@@ -115,7 +124,10 @@ export default function App() {
           <img src={logo} alt="Konuşarak Öğren" style={{height:28}} />
           <strong style={{color:'#1e3a8a'}}>Konuşarak Öğren • Sentiment Chat</strong>
         </div>
-        <span style={styles.nickname}>@{user.nickname}</span>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <span style={styles.nickname}>@{user.nickname}</span>
+          <button type="button" onClick={handleLogout} style={styles.ghostButton}>Cikis</button>
+        </div>
       </header>
       <div style={styles.messages}>
         {messages.map((m) => (
@@ -156,6 +168,7 @@ const styles = {
   input: { flex: 1, border: '1px solid #ccc', borderRadius: 6, padding: '8px 10px' },
   button: { background: '#1e3a8a', color: 'white', border: 'none', padding: '8px 14px', borderRadius: 6, cursor: 'pointer' },
   error: { color: 'red' },
+  ghostButton: { background: 'transparent', border: '1px solid #d1d5db', padding: '6px 10px', borderRadius: 6, cursor: 'pointer' },
 }
 
 
