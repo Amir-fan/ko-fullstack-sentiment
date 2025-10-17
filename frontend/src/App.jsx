@@ -23,28 +23,32 @@ function NicknameGate({ onReady }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nickname: name }),
       })
-      if (!res.ok) throw new Error('Kayıt başarısız')
+      if (!res.ok) {
+        const errText = await res.text().catch(() => '')
+        throw new Error(`Kayit basarisiz: ${res.status} ${errText}`)
+      }
       const data = await res.json()
       localStorage.setItem('userId', String(data.userId))
       localStorage.setItem('nickname', data.nickname)
       onReady({ userId: data.userId, nickname: data.nickname })
     } catch (err) {
-      console.error(err)
-      setError('Kayıt edilemedi. Tekrar deneyiniz.')
+      console.error('register_error', err)
+      setError('Kayit edilemedi. Lutfen tekrar deneyiniz.')
     } finally {
       setPending(false)
     }
   }
 
   return (
-    <form onSubmit={handleRegister} style={{ display: 'flex', gap: 8 }}>
+    <form onSubmit={handleRegister} className="field">
       <input
+        className="input"
         placeholder="Rumuz"
         value={nickname}
         onChange={(e) => setNickname(e.target.value)}
       />
-      <button type="submit" disabled={pending}>Giriş</button>
-      {error && <span style={{ color: 'red' }}>{error}</span>}
+      <button type="submit" className="btn btn-primary" disabled={pending}>{pending ? 'Bekleyin...' : 'Giris'}</button>
+      {error && <span className="error">{error}</span>}
     </form>
   )
 }
