@@ -23,6 +23,8 @@ builder.Services.AddCors(options =>
 
 // HttpClient with reasonable timeout
 builder.Services.AddHttpClient("ai", c => { c.Timeout = TimeSpan.FromSeconds(10); });
+// HttpContext accessor (for DI if needed)
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.Configure<JsonOptions>(options =>
 {
@@ -91,10 +93,10 @@ app.MapGet("/messages", async (int? userId, AppDbContext db) =>
     return Results.Ok(items);
 });
 
-app.MapPost("/message", async (MessageRequest req, AppDbContext db, IHttpClientFactory hcf, IConfiguration cfg, ILoggerFactory lf) =>
+app.MapPost("/message", async (MessageRequest req, AppDbContext db, IHttpClientFactory hcf, IConfiguration cfg, ILoggerFactory lf, HttpContext http) =>
 {
     var log = lf.CreateLogger("message");
-    var requestId = (string?)Microsoft.AspNetCore.Http.HttpContextAccessor.HttpContext?.Items["requestId"];
+    var requestId = http.Items["requestId"] as string;
     if (req.UserId <= 0 || string.IsNullOrWhiteSpace(req.Text))
     {
         log.LogWarning("invalid_message userId={UserId}", req.UserId);
