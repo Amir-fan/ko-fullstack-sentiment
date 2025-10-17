@@ -108,27 +108,50 @@ export default function App() {
   }
 
   return (
-    <div style={{ padding: 16, display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <h3>Merhaba, {user.nickname}</h3>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minHeight: 200, border: '1px solid #ccc', padding: 8 }}>
+    <div style={styles.page}>
+      <header style={styles.header}>
+        <strong>KO Sentiment Chat</strong>
+        <span style={styles.nickname}>@{user.nickname}</span>
+      </header>
+      <div style={styles.messages}>
         {messages.map((m) => (
-          <div key={m.id} style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
-            <span>{m.text}</span>
-            <small style={{ opacity: 0.7 }}>{m.sentiment?.label} ({typeof m.sentiment?.score === 'number' ? m.sentiment.score.toFixed(2) : '-'})</small>
+          <div key={m.id} style={styles.messageRow}>
+            <span style={styles.messageText}>{m.text}</span>
+            <small style={{...styles.sentimentTag, ...(m.sentiment?.label === 'positive' ? styles.positive : m.sentiment?.label === 'negative' ? styles.negative : styles.neutral)}}>
+              {m.sentiment?.label} {typeof m.sentiment?.score === 'number' ? `(${m.sentiment.score.toFixed(2)})` : ''}
+            </small>
           </div>
         ))}
       </div>
-      <form onSubmit={handleSend} style={{ display: 'flex', gap: 8 }}>
+      <form onSubmit={handleSend} style={styles.compose}>
         <input
+          style={styles.input}
           placeholder="Mesaj yazın"
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <button type="submit" disabled={sending}>Gönder</button>
+        <button style={styles.button} type="submit" disabled={sending}>Gönder</button>
       </form>
-      {error && <span style={{ color: 'red' }}>{error}</span>}
+      {error && <span style={styles.error}>{error}</span>}
     </div>
   )
+}
+
+const styles = {
+  page: { padding: 16, display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 720, margin: '0 auto' },
+  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 8, borderBottom: '1px solid #eee' },
+  nickname: { opacity: 0.7, fontSize: 12 },
+  messages: { display: 'flex', flexDirection: 'column', gap: 6, minHeight: 300, border: '1px solid #e5e5e5', borderRadius: 8, padding: 12, background: '#fafafa' },
+  messageRow: { display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' },
+  messageText: { fontSize: 14 },
+  sentimentTag: { fontSize: 12, padding: '2px 8px', borderRadius: 999, background: '#eee' },
+  positive: { background: '#e8fff1', color: '#0a7a3e' },
+  negative: { background: '#ffecec', color: '#b11616' },
+  neutral: { background: '#f1f1f1', color: '#555' },
+  compose: { display: 'flex', gap: 8 },
+  input: { flex: 1, border: '1px solid #ccc', borderRadius: 6, padding: '8px 10px' },
+  button: { background: '#111827', color: 'white', border: 'none', padding: '8px 14px', borderRadius: 6, cursor: 'pointer' },
+  error: { color: 'red' },
 }
 
 

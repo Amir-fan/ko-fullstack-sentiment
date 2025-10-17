@@ -31,6 +31,27 @@ builder.Services.Configure<JsonOptions>(options =>
 
 var app = builder.Build();
 
+// Simple requestId for correlation
+app.Use(async (ctx, next) =>
+{
+    var requestId = Guid.NewGuid().ToString("n");
+    ctx.Items["requestId"] = requestId;
+    ctx.Response.Headers["x-request-id"] = requestId;
+    var start = DateTime.UtcNow;
+    try
+    {
+        await next();
+        var elapsedMs = (DateTime.UtcNow - start).TotalMilliseconds;
+        app.Logger.LogInformation("request_end {Method} {Path} {Status} {ElapsedMs}ms {RequestId}", ctx.Request.Method, ctx.Request.Path, ctx.Response.StatusCode, (int)elapsedMs, requestId);
+    }
+    catch (Exception ex)
+    {
+        var elapsedMs = (DateTime.UtcNow - start).TotalMilliseconds;
+        app.Logger.LogError(ex, "request_error {Method} {Path} {ElapsedMs}ms {RequestId}", ctx.Request.Method, ctx.Request.Path, (int)elapsedMs, requestId);
+        throw;
+    }
+});
+
 // Migrate/ensure
 using (var scope = app.Services.CreateScope())
 {
@@ -73,6 +94,7 @@ app.MapGet("/messages", async (int? userId, AppDbContext db) =>
 app.MapPost("/message", async (MessageRequest req, AppDbContext db, IHttpClientFactory hcf, IConfiguration cfg, ILoggerFactory lf) =>
 {
     var log = lf.CreateLogger("message");
+    var requestId = (string?)Microsoft.AspNetCore.Http.HttpContextAccessor.HttpContext?.Items["requestId"];
     if (req.UserId <= 0 || string.IsNullOrWhiteSpace(req.Text))
     {
         log.LogWarning("invalid_message userId={UserId}", req.UserId);
@@ -107,7 +129,10 @@ app.MapPost("/message", async (MessageRequest req, AppDbContext db, IHttpClientF
         {
             log.LogWarning("ai_call_failed status={Status}", (int)resp.StatusCode);
         }
+        var aiStart = DateTime.UtcNow;
         var ai = await resp.Content.ReadFromJsonAsync<AiAnalyzeResponse>();
+        var aiElapsedMs = (DateTime.UtcNow - aiStart).TotalMilliseconds;
+        log.LogInformation("ai_result label={Label} score={Score} latencyMs={Latency}", ai?.label, ai?.score, (int)aiElapsedMs);
         if (ai is not null && !string.IsNullOrWhiteSpace(ai.label))
         {
             message.SentimentLabel = ai.label;
@@ -129,6 +154,8 @@ app.MapPost("/message", async (MessageRequest req, AppDbContext db, IHttpClientF
         createdAt = message.CreatedAt
     });
 });
+
+app.MapGet("/health", () => Results.Ok(new { status = "ok", time = DateTime.UtcNow }));
 
 app.Run();
 

@@ -12,7 +12,7 @@ Basit bir sohbet uygulaması: kullanıcı mesaj gönderir, her mesaj için anlı
 - Web (Vercel): https://ko-fullstack-sentiment.vercel.app
 - Backend API (Render): https://ko-fullstack-sentiment-1.onrender.com
 - AI Service (Hugging Face Spaces): https://amir7871-ko-sentiment-ai-service.hf.space/analyze
-- Mobile (APK/build): eklenecek
+- Mobile (APK/build): https://drive.google.com/file/d/13pE_S3V0sw56eyTCWFFuAm_6fUWKrd22/view?usp=sharing
 
 ## Kurulum (Özet)
 ### ai-service (Hugging Face Spaces)
