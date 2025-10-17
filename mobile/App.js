@@ -1,7 +1,7 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import {Button, FlatList, SafeAreaView, StyleSheet, Text, TextInput, View} from 'react-native';
+import { API_BASE_URL } from './config';
 
-const API_BASE_URL = process.env.API_BASE_URL || 'https://ko-fullstack-sentiment-1.onrender.com';
 
 function useStoredUser() {
   const [user, setUser] = useState(null);
