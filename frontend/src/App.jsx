@@ -110,45 +110,53 @@ export default function App() {
 
   if (!user) {
     return (
-      <div style={{ padding: 16 }}>
-        <h3>KO Sentiment Chat</h3>
-        <NicknameGate onReady={setUser} />
+      <div className="app" style={{alignItems:'center', justifyContent:'center', minHeight:'100vh'}}>
+        <div className="card">
+          <div className="brand" style={{marginBottom:12}}>
+            <img src={logo} alt="Konuşarak Öğren" style={{height:36}} />
+            <div>
+              <div className="card-title">Konuşarak Öğren</div>
+              <div className="card-sub">Basit chat • Anlık duygu analizi</div>
+            </div>
+          </div>
+          <NicknameGate onReady={setUser} />
+        </div>
       </div>
     )
   }
 
   return (
-    <div style={styles.page}>
-      <header style={styles.header}>
-        <div style={{display:'flex',alignItems:'center',gap:10}}>
+    <div className="app">
+      <header className="app-header">
+        <div className="brand">
           <img src={logo} alt="Konuşarak Öğren" style={{height:28}} />
-          <strong style={{color:'#1e3a8a'}}>Konuşarak Öğren • Sentiment Chat</strong>
+          <strong className="brand-title">Konuşarak Öğren • Sentiment Chat</strong>
         </div>
-        <div style={{display:'flex',alignItems:'center',gap:10}}>
-          <span style={styles.nickname}>@{user.nickname}</span>
-          <button type="button" onClick={handleLogout} style={styles.ghostButton}>Cikis</button>
+        <div className="brand">
+          <span className="nickname">@{user.nickname}</span>
+          <button type="button" onClick={handleLogout} className="btn btn-ghost">Cikis</button>
         </div>
       </header>
-      <div style={styles.messages}>
+      <div className="messages">
         {messages.map((m) => (
-          <div key={m.id} style={styles.messageRow}>
-            <span style={styles.messageText}>{m.text}</span>
-            <small style={{...styles.sentimentTag, ...(m.sentiment?.label === 'positive' ? styles.positive : m.sentiment?.label === 'negative' ? styles.negative : styles.neutral)}}>
+          <div key={m.id} className="message-row">
+            <span className="message-text">{m.text}</span>
+            <small className={`badge ${m.sentiment?.label==='positive'?'pos':m.sentiment?.label==='negative'?'neg':'neu'}`}>
               {m.sentiment?.label} {typeof m.sentiment?.score === 'number' ? `(${m.sentiment.score.toFixed(2)})` : ''}
             </small>
           </div>
         ))}
       </div>
-      <form onSubmit={handleSend} style={styles.compose}>
+      <form onSubmit={handleSend} className="compose">
         <input
-          style={styles.input}
+          className="input"
           placeholder="Mesaj yazın"
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
-        <button style={styles.button} type="submit" disabled={sending}>Gönder</button>
+        <button className="btn btn-primary" type="submit" disabled={sending}>Gönder</button>
       </form>
-      {error && <span style={styles.error}>{error}</span>}
+      {error && <span className="error">{error}</span>}
     </div>
   )
 }
