@@ -110,7 +110,10 @@ export default function App() {
   return (
     <div style={styles.page}>
       <header style={styles.header}>
-        <strong>KO Sentiment Chat</strong>
+        <div style={{display:'flex',alignItems:'center',gap:10}}>
+          <img src="/images/logo2024-1024x252.png" alt="Konuşarak Öğren" style={{height:28}} />
+          <strong style={{color:'#1e3a8a'}}>Konuşarak Öğren • Sentiment Chat</strong>
+        </div>
         <span style={styles.nickname}>@{user.nickname}</span>
       </header>
       <div style={styles.messages}>
@@ -150,7 +153,7 @@ const styles = {
   neutral: { background: '#f1f1f1', color: '#555' },
   compose: { display: 'flex', gap: 8 },
   input: { flex: 1, border: '1px solid #ccc', borderRadius: 6, padding: '8px 10px' },
-  button: { background: '#111827', color: 'white', border: 'none', padding: '8px 14px', borderRadius: 6, cursor: 'pointer' },
+  button: { background: '#1e3a8a', color: 'white', border: 'none', padding: '8px 14px', borderRadius: 6, cursor: 'pointer' },
   error: { color: 'red' },
 }
 
