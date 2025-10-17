@@ -3,6 +3,13 @@ import logo from '../images/ko-logo.png'
 
 const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
 
+function fetchWithTimeout(url, options = {}, timeoutMs = 12000) {
+  const controller = new AbortController()
+  const id = setTimeout(() => controller.abort(), timeoutMs)
+  return fetch(url, { ...options, signal: controller.signal })
+    .finally(() => clearTimeout(id))
+}
+
 function NicknameGate({ onReady }) {
   const [nickname, setNickname] = useState('')
   const [pending, setPending] = useState(false)
@@ -18,7 +25,7 @@ function NicknameGate({ onReady }) {
     }
     setPending(true)
     try {
-      const res = await fetch(`${apiBase}/register`, {
+      const res = await fetchWithTimeout(`${apiBase}/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ nickname: name }),
@@ -86,7 +93,7 @@ export default function App() {
     if (!content || !user) return
     setSending(true)
     try {
-      const res = await fetch(`${apiBase}/message`, {
+      const res = await fetchWithTimeout(`${apiBase}/message`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user.userId, text: content }),
