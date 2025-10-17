@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
+import logo from '../images/ko-logo.png'
 
 const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'
 
@@ -111,7 +112,7 @@ export default function App() {
     <div style={styles.page}>
       <header style={styles.header}>
         <div style={{display:'flex',alignItems:'center',gap:10}}>
-          <img src="/images/logo2024-1024x252.png" alt="Konuşarak Öğren" style={{height:28}} />
+          <img src={logo} alt="Konuşarak Öğren" style={{height:28}} />
           <strong style={{color:'#1e3a8a'}}>Konuşarak Öğren • Sentiment Chat</strong>
         </div>
         <span style={styles.nickname}>@{user.nickname}</span>
